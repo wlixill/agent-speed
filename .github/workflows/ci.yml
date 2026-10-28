@@ -32,6 +32,51 @@ jobs:
       - name: Lint installer
         run: shellcheck install.sh
 
+  linux:
+    name: Ubuntu AI agent monitor
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Install UI and native traffic build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb desktop-file-utils fonts-noto-cjk clang-14 gcc make pkg-config linux-libc-dev libelf-dev zlib1g-dev policykit-1 libicu70 libssl3 libfontconfig1 libfreetype6 libx11-6 libxext6 libxi6 libxrandr2 libxcursor1 libxfixes3 libice6 libsm6 libgl1 libgtk-3-0
+      - name: Test shared core on Linux
+        run: dotnet test windows/tests/AgentSpeed.Core.Tests -c Release
+      - name: Test Linux application logic
+        run: dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
+      - name: Publish Ubuntu preview
+        run: bash linux/scripts/publish.sh
+      - name: Package and validate Ubuntu Debian installer
+        run: |
+          bash linux/scripts/package-deb.sh --publish-dir dist/AgentSpeed-Ubuntu-linux-x64
+          python3 linux/scripts/check-deb.py dist/agent-speed_$(cat VERSION)-$(cat linux/DEBIAN_REVISION)_amd64.deb
+      - name: Exercise X11 app with synthetic Codex logs
+        run: xvfb-run -a python3 linux/scripts/smoke_test.py dist/AgentSpeed-Ubuntu-linux-x64/AgentSpeed.Linux
+      - name: Validate vehicle animation and rich history rendering
+        run: xvfb-run -a python3 linux/scripts/visual-smoke.py dist/AgentSpeed-Ubuntu-linux-x64/AgentSpeed.Linux
+      - name: Validate settings, model counters and background startup
+        run: xvfb-run -a python3 linux/scripts/feature-smoke.py dist/AgentSpeed-Ubuntu-linux-x64/AgentSpeed.Linux
+      - name: Validate production pricing, themes, execution modes and numeric tray
+        run: xvfb-run -a python3 linux/scripts/app-feature58-smoke.py
+      - name: Validate production sources, independent orbs and optional feature windows
+        run: xvfb-run -a python3 linux/scripts/app-feature912-smoke.py
+      - name: Validate advanced history interactions and CSV
+        run: xvfb-run -a python3 linux/scripts/history-advanced-smoke.py
+      - name: Validate advanced independent orb controls and geometry
+        run: xvfb-run -a python3 linux/scripts/advanced-orbs-smoke.py
+      - uses: actions/upload-artifact@v7
+        with:
+          name: AgentSpeed-Ubuntu-linux-x64
+          path: |
+            dist/AgentSpeed-Ubuntu-linux-x64.tar.gz
+            dist/agent-speed_*_amd64.deb
+            dist/agent-speed_*_amd64.deb.sha256
+          if-no-files-found: error
+
   macos:
     name: macOS
     runs-on: macos-26
