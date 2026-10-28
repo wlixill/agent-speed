@@ -12,12 +12,23 @@ internal readonly record struct DayKey(string Day, SourceKind Source);
 /// <param name="Cost">Null when the contribution was stored before costs existed (METRICS 8, 9.7).</param>
 internal readonly record struct ModelTotals(long Requests, long Output, long MeasuredOutput, long MeasuredMs, CostTally? Cost = null)
 {
+    public long? Input { get; init; }
+
+    public long? CachedInput { get; init; }
+
     public static ModelTotals operator +(ModelTotals a, ModelTotals b) => new(
         a.Requests + b.Requests,
         a.Output + b.Output,
         a.MeasuredOutput + b.MeasuredOutput,
         a.MeasuredMs + b.MeasuredMs,
-        CostMerge.Merged(a.Cost, a.Requests, b.Cost, b.Requests));
+        CostMerge.Merged(a.Cost, a.Requests, b.Cost, b.Requests))
+    {
+        Input = a.IsEmpty ? b.Input : b.IsEmpty ? a.Input : a.Input + b.Input,
+        CachedInput = a.IsEmpty ? b.CachedInput : b.IsEmpty ? a.CachedInput : a.CachedInput + b.CachedInput,
+    };
+
+    private bool IsEmpty => Requests == 0 && Output == 0 && MeasuredOutput == 0 && MeasuredMs == 0
+        && Input.GetValueOrDefault() == 0 && CachedInput.GetValueOrDefault() == 0;
 }
 
 internal static class CostMerge
@@ -99,8 +110,15 @@ internal sealed class DayAggregate
         Output += tokens.Output;
         Reasoning += tokens.Reasoning;
         var model = response.Model ?? string.Empty;
-        var totals = Models.TryGetValue(model, out var known) ? known : new ModelTotals(0, 0, 0, 0, CostTally.Zero);
-        totals = totals with { Requests = totals.Requests + response.Requests, Output = totals.Output + tokens.Output, Cost = totals.Cost?.Add(cost, requests: response.Requests) };
+        var totals = Models.TryGetValue(model, out var known) ? known : new ModelTotals(0, 0, 0, 0, CostTally.Zero) { Input = 0, CachedInput = 0 };
+        totals = totals with
+        {
+            Requests = totals.Requests + response.Requests,
+            Input = totals.Input + tokens.Input,
+            CachedInput = totals.CachedInput + tokens.CachedInput,
+            Output = totals.Output + tokens.Output,
+            Cost = totals.Cost?.Add(cost, requests: response.Requests),
+        };
         if (response.Final && SpeedMath.TryGetSpeedInterval(response, out var interval))
         {
             MeasuredOutput += tokens.Output;
@@ -165,6 +183,8 @@ internal sealed class DayAggregate
             .Select(m => new ModelUsage(m.Key, m.Value.Requests, m.Value.Output, m.Value.MeasuredOutput, m.Value.MeasuredMs)
             {
                 Cost = m.Value.Cost,
+                Input = m.Value.Input,
+                CachedInput = m.Value.CachedInput,
             })])
     {
         Cost = Cost,

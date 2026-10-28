@@ -36,9 +36,9 @@ internal sealed partial class HistoryStore : IDisposable
 {
     /// <summary>
     /// 2 adds measured output and time per model (METRICS 8). 3 adds cost per contribution and model, the day bindings
-    /// of the price tables and their copies (METRICS 9.7).
+    /// of the price tables and their copies (METRICS 9.7). 4 adds nullable per-model input and cache-read totals.
     /// </summary>
-    public const int SchemaVersion = 3;
+    public const int SchemaVersion = 4;
 
     /// <summary>Day → price table version, and a copy of every version a binding references (METRICS 9.7).</summary>
     private const string PriceTablesSchema = """
@@ -84,6 +84,8 @@ internal sealed partial class HistoryStore : IDisposable
             measured_ms INTEGER NOT NULL DEFAULT 0,
             cost_micro_usd INTEGER,
             unpriced_requests INTEGER,
+            input INTEGER,
+            cached_input INTEGER,
             PRIMARY KEY (file_id, day, source, model)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS day_peaks (day TEXT PRIMARY KEY, peak REAL NOT NULL) WITHOUT ROWID;
         """;
@@ -227,7 +229,7 @@ internal sealed partial class HistoryStore : IDisposable
 
         using (var models = _connection.Prepare(
             "SELECT file_id, day, source, model, requests, output, measured_output, measured_ms, cost_micro_usd, " +
-            "unpriced_requests FROM contribution_models"))
+            "unpriced_requests, input, cached_input FROM contribution_models"))
         {
             while (models.Step())
             {
@@ -236,7 +238,11 @@ internal sealed partial class HistoryStore : IDisposable
                     && entry.Days.TryGetValue(key, out var day))
                 {
                     day.Models[models.GetString(3) ?? string.Empty] = new ModelTotals(
-                        models.GetInt64(4), models.GetInt64(5), models.GetInt64(6), models.GetInt64(7), ReadCost(models, 8));
+                        models.GetInt64(4), models.GetInt64(5), models.GetInt64(6), models.GetInt64(7), ReadCost(models, 8))
+                    {
+                        Input = models.GetNullableInt64(10),
+                        CachedInput = models.GetNullableInt64(11),
+                    };
                 }
             }
         }
@@ -295,7 +301,7 @@ internal sealed partial class HistoryStore : IDisposable
             "VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)");
         using var insertModel = _connection.Prepare(
             "INSERT INTO contribution_models (file_id, day, source, model, requests, output, measured_output, measured_ms, " +
-            "cost_micro_usd, unpriced_requests) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)");
+            "cost_micro_usd, unpriced_requests, input, cached_input) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)");
         _connection.Transaction(() =>
         {
             foreach (var (entry, keys) in batch)
@@ -330,7 +336,7 @@ internal sealed partial class HistoryStore : IDisposable
                     {
                         insertModel.Bind(1, entry.Id).Bind(2, key.Day).Bind(3, source).Bind(4, model)
                             .Bind(5, usage.Requests).Bind(6, usage.Output).Bind(7, usage.MeasuredOutput).Bind(8, usage.MeasuredMs);
-                        BindCost(insertModel, 9, usage.Cost).Run();
+                        BindNullable(BindNullable(BindCost(insertModel, 9, usage.Cost), 11, usage.Input), 12, usage.CachedInput).Run();
                     }
                 }
             }
@@ -594,11 +600,12 @@ internal sealed partial class HistoryStore : IDisposable
                 connection.Transaction(() =>
                 {
                     connection.Execute(Schema);
-                    // Stored models gain measured totals (AnalysisVersion 2) and costs (3); each bump analyses every file
-                    // again to fill them, and contributions of files that are gone keep NULL costs (METRICS 8).
+                    // Available logs are replayed after analysis-version changes; gone logs retain their aggregates.
+                    // Nullable model input columns preserve unknown historical values instead of inventing zeroes.
                     AddMissingColumns(connection, "contribution_models",
                         ("measured_output", "INTEGER NOT NULL DEFAULT 0"), ("measured_ms", "INTEGER NOT NULL DEFAULT 0"),
-                        ("cost_micro_usd", "INTEGER"), ("unpriced_requests", "INTEGER"));
+                        ("cost_micro_usd", "INTEGER"), ("unpriced_requests", "INTEGER"),
+                        ("input", "INTEGER"), ("cached_input", "INTEGER"));
                     AddMissingColumns(connection, "contributions", ("cost_micro_usd", "INTEGER"), ("unpriced_requests", "INTEGER"));
 
                     connection.Execute(PriceTablesSchema);
@@ -649,6 +656,9 @@ internal sealed partial class HistoryStore : IDisposable
     private static SqliteStatement BindCost(SqliteStatement statement, int column, CostTally? cost) => cost is { } value
         ? statement.Bind(column, value.CostMicroUsd).Bind(column + 1, value.UnpricedRequests)
         : statement.Bind(column, (string?)null).Bind(column + 1, (string?)null);
+
+    private static SqliteStatement BindNullable(SqliteStatement statement, int column, long? value) => value is { } known
+        ? statement.Bind(column, known) : statement.Bind(column, (string?)null);
 
     private static DayKey? Key(string? day, string? source) =>
         day is not null && SourceNames.Parse(source) is { } kind ? new DayKey(day, kind) : null;

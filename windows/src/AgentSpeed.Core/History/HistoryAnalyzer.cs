@@ -48,8 +48,8 @@ internal sealed record HistoryReport(
 /// </summary>
 internal sealed partial class HistoryAnalyzer
 {
-    /// <summary>2: measured output and time per model (METRICS 8). 3: cost (METRICS 9.7).</summary>
-    public const int AnalysisVersion = 4;
+    /// <summary>2: model speed. 3: cost. 4: execution modes. 5: exact model input and cache-read tokens.</summary>
+    public const int AnalysisVersion = 5;
 
     private const string OpenCodeFamily = "opencode";
     private const string ZoneMeta = "timeZone";
