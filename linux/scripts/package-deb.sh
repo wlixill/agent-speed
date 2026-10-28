@@ -80,7 +80,7 @@ Maintainer: Agent Speed local build <root@localhost>
 Installed-Size: $installed_size
 Depends: libc6 (>= 2.35), libgcc-s1, libstdc++6, zlib1g, libicu70, libssl3, libgssapi-krb5-2, ca-certificates, tzdata, libfontconfig1, libfreetype6, libsqlite3-0, libx11-6, libxext6, libxi6, libxrandr2, libxcursor1, libxfixes3, libice6, libsm6, libgl1, libgtk-3-0, hicolor-icon-theme, desktop-file-utils, packagekit, packagekit-tools, libelf1, policykit-1
 Recommends: gnome-shell-extension-appindicator, fonts-noto-cjk
-Homepage: https://github.com/zoefix/agent-speed
+Homepage: https://github.com/wlixill/agent-speed-ubuntu22
 Description: Local AI agent speed monitor and daily usage history
  Ubuntu 22.04 x64 GNOME/X11 preview with a floating gauge, system tray,
  application-menu launcher and persistent daily usage history.

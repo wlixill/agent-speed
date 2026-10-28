@@ -1,6 +1,8 @@
-# Agent Speed — Ubuntu 视觉版
+# agent-speed-ubuntu22 — Linux 使用说明
 
 面向 **Ubuntu 22.04 / GNOME / X11 / x64** 的本地 AI 工具仪表，默认保留已有的 Codex 来源配置，可自行启用其他来源。本版沿用原项目的测速核心与 13 种载具素材，加入发光表盘、载具动画、实时曲线，以及独立的完整历史统计窗口。生成中的速度使用近期实测速率估算，完成后校正；并行会话和子 agent 由同一套核心去重、汇总。
+
+仓库：[wlixill/agent-speed-ubuntu22](https://github.com/wlixill/agent-speed-ubuntu22)，移植自 [zoefix/agent-speed](https://github.com/zoefix/agent-speed)。项目概览见 [简体中文 README](../README.zh-CN.md) 或 [English README](../README.md)。
 
 ## 安装 Debian 包（推荐）
 
@@ -19,11 +21,11 @@ sudo apt install ./agent-speed_1.4.1-8_amd64.deb
 
 ## Codex Radar 平台兼容（1.4.1-8）
 
-当前雷达 API 会拒绝 `client.platform=Linux`。在“上报、头像与设备 → 上报平台标识”中可明确选择 **Windows（兼容模式）**，注册、实时报告和请求标识统一使用 Windows 10；该选择只影响当前上报服务，实际 Ubuntu 系统和本地测速不变。新身份默认仍使用 Linux，清除身份后也恢复原生标识。
+对暂不接受 `client.platform=Linux` 的服务，在“上报、头像与设备 → 上报平台标识”中可明确选择 **Windows（兼容旧服务）**，注册、实时报告和请求标识统一使用 Windows 10；该选择只影响当前上报服务，实际 Ubuntu 系统和本地测速不变。新身份默认仍使用 Linux，清除身份后也恢复原生标识。
 
 兼容选择保存在当前设备身份中，保留设备 ID、密钥、昵称与已选分享项目，重启后继续采用。界面显示当前模式、最近请求 HTTP 状态／错误码／字段、报告尝试和成功次数；不会把请求正文、签名或 API 密钥放入诊断信息。
 
-本次用既有设备身份和真实本机活动完成了注册、两份成功实时报告，以及公开实时榜本人在线记录的验证。没有使用合成用量，也不会补传开启前的本地历史。其他机器安装后仍需自行配置服务、选择兼容模式并同意分享内容，安装包不包含本机身份或密钥。
+兼容模式已通过真实服务的签名注册、实时报告成功响应及公开实时榜接收验证。上报只包含启用后的新活动，不补传此前的本地历史。每台机器安装后仍需自行配置服务、选择兼容模式并同意分享内容，安装包不包含用户身份或密钥。
 
 ## 进一步对齐的前四项（1.4.1-7）
 
@@ -100,7 +102,14 @@ Ubuntu 的 `ubuntu-appindicators@ubuntu.com` 扩展需要启用才能显示托�
 
 ## 从源码构建
 
-需要 .NET 10 SDK：
+需要 .NET 10 SDK，并在 Ubuntu 22.04 x64 上准备 `clang-14`、`gcc`、`make`、`pkg-config`、`libelf-dev`、`zlib1g-dev`、`linux-libc-dev`、`python3`、`dpkg-dev` 与 `desktop-file-utils`。首次获取源码：
+
+```sh
+git clone https://github.com/wlixill/agent-speed-ubuntu22.git
+cd agent-speed-ubuntu22
+```
+
+在仓库根目录运行：
 
 ```sh
 dotnet test windows/tests/AgentSpeed.Core.Tests -c Release

@@ -1,157 +1,104 @@
 <div align="center">
 
-<img src="assets/icon/icon-1024.png" width="128" alt="Agent Speed icon">
+<img src="assets/icon/icon-1024.png" width="112" alt="Agent Speed icon">
 
-# Agent Speed
+# agent-speed-ubuntu22
 
-**Feel your AI agents run.** A native racing instrument for the live token speed of Codex, Claude Code, Claude Desktop, DSH (DeepSeek Harness), OpenCode, Gemini CLI, omp, Antigravity, WorkBuddy, WorkBuddy AI, ZCode, Kimi Code CLI and Grok Build — calm when idle, on fire at the redline.
+**Agent Speed for Ubuntu 22.04 x64 · GNOME / X11**
 
-[English](README.md) · [繁體中文](README.zh-TW.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
+Live token gauges, animated vehicles, floating orbs, a tray indicator and usage history for local AI tools.
 
-[![Release](https://img.shields.io/github/v/release/zoefix/agent-speed?style=flat-square)](https://github.com/zoefix/agent-speed/releases/latest)
-![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black?style=flat-square&logo=apple)
-![Windows 10/11](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md)
 
-<img src="docs/images/hero.png" width="760" alt="Agent Speed floating orb and menu bar">
+![Ubuntu 22.04](https://img.shields.io/badge/Ubuntu-22.04-E95420?logo=ubuntu)
+![Desktop](https://img.shields.io/badge/Desktop-GNOME%20%2F%20X11-blue)
+![Architecture](https://img.shields.io/badge/Architecture-x64-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 </div>
 
-This fork includes an **Ubuntu 22.04 x64 / GNOME / X11** port with live gauges, independent floating orbs, a tray indicator, usage history, optional reporting, and Debian packaging. See [`linux/README.md`](linux/README.md) for installation, source builds, and platform limitations.
+This Ubuntu fork of [zoefix/agent-speed](https://github.com/zoefix/agent-speed) uses Avalonia and the upstream .NET measurement/presentation libraries. The application and Debian package are named **Agent Speed** / `agent-speed`.
 
-## Install
+## Install a Debian package
 
-**macOS 14 or later** (Apple Silicon and Intel) — paste into Terminal:
+The current package revision is **1.4.1-8**. Build a package using the instructions below, or obtain a matching `.deb` and checksum from its distributor. Compiled packages are excluded from the Git source tree; Ubuntu packages have not yet been published in this fork's GitHub Releases.
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/zoefix/agent-speed/main/install.sh | sh
-```
-
-**Windows 10 / 11** (x64 and ARM64) — paste into PowerShell:
-
-```powershell
-irm https://raw.githubusercontent.com/zoefix/agent-speed/main/install.ps1 | iex
-```
-
-That's it. The installer downloads the latest release from GitHub, verifies its SHA-256 checksum, installs it and starts it. Run the same command again to update.
-
-<details>
-<summary>Uninstall</summary>
+From the directory containing the package and checksum:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/zoefix/agent-speed/main/install.sh | sh -s -- --uninstall
+sha256sum -c agent-speed_1.4.1-8_amd64.deb.sha256
+sudo apt install ./agent-speed_1.4.1-8_amd64.deb
 ```
 
-```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/zoefix/agent-speed/main/install.ps1))) -Uninstall
+Search **Agent Speed** in the application menu, or run:
+
+```sh
+agent-speed --dashboard
 ```
 
-Add `--purge` / `-Purge` to remove settings as well. On Windows you can also uninstall from *Settings → Apps*.
-</details>
+The package includes the .NET runtime. APT installs missing system dependencies. Use **Ubuntu on Xorg** at login; the GNOME AppIndicators extension is needed for tray icons. To uninstall, run `sudo apt remove agent-speed`; user settings and history are retained.
 
-## What you get
+## Ubuntu features
 
-- **Floating orb** — a smoked-glass instrument with a 36-segment LED gauge. As speed climbs, so does its title — from *Walking* and *Bicycle* through *Bullet Train* and *Fighter Jet* to *Rocket* at the redline — while the gauge sweeps through the heat spectrum, a comet races around the ring, sparks fly, embers rise and every finished response sends out a shockwave. Beat your daily peak and it celebrates.
-- **Five orb styles, as many orbs as you like** — *LED Gauge*, *Needle Tachometer*, *Liquid Energy*, *Reactor* and *Minimal Ring*. Give each orb its own mix of sources (all of them, one tool, or Claude Code + Codex) and a glass name plate that stays legible on any wallpaper.
-- **Menu bar / taskbar** — a compact gauge and number that never jitters, right where you look: tok/s, money, or tok/s with the live money rate over today's total, plus optional network speed. On Windows it lives inside the taskbar, next to the clock.
-- **Dashboard** — a glowing line drawing of your current speed title's vehicle moves inside its orb — a walker, a bicycle pushing off, all the way to a rocket at the redline — plus a live chart, per-source speed, every active agent (including sub-agents) with its phase, and today's totals. Click a source to open its history.
-- **Cost** — what your agents' work would cost at each model's API list prices: live money per second next to tok/s, today's cost in the dashboard and each day's cost in the history. US dollars by default, or any of 38 currencies with daily exchange rates; sources on a flat-rate subscription can be left out. The price table updates daily from this repository.
-- **Network traffic** — upload and download speed per agent or for the whole computer, as two small lines on the orbs, in the menu bar / taskbar and in the dashboard, with each day's traffic in the history. On Windows, per-agent traffic needs a small optional helper service, installed once with administrator approval.
-- **Title themes** — nine ladders of speed titles: *Vehicles*, *Animals*, *Beaufort Scale*, *Cosmos*, *Cultivation*, *Martial Arts*, *Arcane Ranks*, *Game Ranks* and *Engineer Career* — or up to eight sets of your own. Outside *Vehicles*, the dashboard orb shows a glowing title badge.
-- **Usage history** — every day since your oldest log: output and input tokens, requests, average speed and peak, cost and network traffic, charted by source over today, yesterday or any date range, with per-model speed and CSV export. Only daily totals are kept, so your history survives even after your tools delete old logs.
-- **Live reporting (opt-in)** — off by default; if you like, share your live numbers with an API you pick, such as the [Codex Radar](https://codexradar.com/) speed ladder, under a username you choose. Never conversation content, files or project names — see [Privacy](#privacy).
-- **Execution modes** — show confirmed Standard / Fast / Ultrafast modes and native accelerator, model-variant or routing choices across supported agents, with defaults and unknown values kept distinct. History has a separate mode CSV; measurement formulas stay the same.
-- **Profile and devices (optional API extension)** — preview, change or remove an avatar, and link devices through an approved one-time code. Your receiver must support the [new API schema](spec/report-schema.json); each device keeps its own key and unlinking preserves accounted history.
-- **Native everywhere** — SwiftUI + AppKit on macOS, WPF with Fluent/Mica on Windows. Light, dark or automatic theme. English, 繁體中文, 简体中文, 日本語.
-- **Humane** — effects intensity from *Off* to *Max*, respects Reduce Motion and high contrast, click-through mode, magnetic edges, remembers its place on every display, launches at login.
-- **Always current** — checks GitHub Releases in the background and updates with one click, verified by SHA-256.
+- **Live dashboard:** glowing gauges, 13 animated vehicle tiers, 1/2/5-minute charts, source speeds and agent/sub-agent activity. Switch between output speed and input-plus-output throughput.
+- **Independent floating orbs:** five styles, up to eight windows, per-orb sources/readouts, size, opacity, click-through, screen placement, snapping, split/merge and undo. Nine title presets and custom titles are available.
+- **Tray and startup:** numeric speed/cost indicators, optional traffic indicators, theme/effect controls, background startup and opt-in login startup.
+- **Usage and model history:** daily charts, source/model breakdowns, date filters, weighted measured speed, input/cache/output tokens, execution modes, cost, traffic coverage and CSV export. Older values that cannot be recovered remain unknown.
+- **Sources and costs:** Codex is enabled by default. Other supported parsers and log directories can be configured. API-equivalent costs support 38 currencies and subscription exclusions; public price/rate refresh is opt-in.
+- **Optional network traffic:** basic TCP sampling, plus an explicitly authorized enhanced TCP/UDP helper. Coverage, attribution limits and requirements are explained in the [Linux guide](linux/README.md).
+- **Optional reporting:** signed registration and reports, receiver-dependent profile/device features, diagnostics and an explicit Windows compatibility choice for receivers that reject Linux.
+- **Debian updates:** manual packages or a configured HTTPS update feed with SHA-256/package checks. Automatic checks are off by default; no public Ubuntu update feed is configured.
 
-<p align="center"><img src="docs/images/orb-styles.png" width="760" alt="The five orb styles: LED Gauge, Needle Tachometer, Liquid Energy, Reactor and Minimal Ring"></p>
+The shared parsers cover Codex, Claude Code, Claude Desktop agent logs, DSH, OpenCode, Gemini CLI, omp, Antigravity, WorkBuddy, WorkBuddy AI, ZCode, Kimi Code CLI and Grok Build. Only enabled local sources are scanned. Parser availability does not establish that every tool/version has been tested on Ubuntu.
 
-<p align="center"><img src="docs/images/orbs.png" width="760" alt="Several orbs, each with its own sources and a glass name plate"></p>
+## What the speed means
 
-<p align="center"><img src="docs/images/hero-vehicle.gif" width="480" alt="The vehicle inside the dashboard orb, from bicycle to rocket"></p>
+Measured speed is **output tokens divided by the model response duration**, including time to first token. Parallel activity is combined by the shared engine. While a response is streaming, the app may show a recent measured-speed estimate marked `≈`; a completed response corrects it. Logs do not provide a timestamp for every visible token, so this is not an exact measurement of text appearing on screen.
 
-<p align="center"><img src="docs/images/dashboards.png" width="560" alt="Dashboard in dark (tok/s) and light (cost per second), with today's cost and network traffic"></p>
+Unknown values are shown as `—`; partial costs use `≥`. API-equivalent costs are estimates, not subscription bills. See [measurement semantics](spec/METRICS.md) and the [Linux guide](linux/README.md).
 
-<p align="center"><img src="docs/images/history.png" width="760" alt="Usage history window with daily output and cost"></p>
+## Codex Radar compatibility
 
-## How speed is measured
+Open the reporting window from the tray, configure the HTTPS receiver, review sharing choices and explicitly enable reporting. For a receiver that does not accept `client.platform=Linux`, choose **Windows（兼容旧服务）** under **上报平台标识** and apply with **同意并开始上报**.
 
-Agent Speed reads the transcripts your agents already write on your disk:
-
-| Source | Folder |
-| --- | --- |
-| Codex (CLI, IDE, desktop) | `~/.codex/sessions` and `archived_sessions`, compressed logs included (or `$CODEX_HOME`) |
-| Claude Code (CLI, IDE) | `~/.claude/projects` (or `$CLAUDE_CONFIG_DIR/projects`) |
-| Claude Desktop (Code and agent sessions) | `~/.claude/projects`, told apart automatically |
-| DSH (`dsh`, desktop and CLI) | `~/.dsh/sessions` (or `$DSH_HOME/sessions`) |
-| OpenCode (CLI and desktop) | `~/.local/share/opencode/opencode.db` (or `$XDG_DATA_HOME/opencode`) |
-| Gemini CLI | `~/.gemini/tmp` (or `$GEMINI_CLI_HOME/.gemini/tmp`) |
-| omp (oh-my-pi) | `~/.omp/agent/sessions` and every profile in `~/.omp/profiles` (or `$PI_CODING_AGENT_DIR/sessions`) |
-| Antigravity (`agy` CLI, desktop app, IDE and extensions) | `~/.gemini/antigravity-cli`, `~/.gemini/antigravity` and `~/.gemini/antigravity-ide` (their `conversations` folders) |
-| WorkBuddy (Tencent, China edition) | `~/.workbuddy/projects` |
-| WorkBuddy AI (international edition) | `~/.workbuddy-ai/projects` |
-| ZCode | `~/.zcode/cli/db/db.sqlite` (or `$ZCODE_DATA_BASE_DIR/.zcode/cli/db`) |
-| Kimi Code CLI (TypeScript v2) | `~/.kimi-code/sessions` (or `$KIMI_CODE_HOME/sessions`) |
-| Grok Build | `~/.grok/sessions` (or `$GROK_HOME/sessions`) |
-
-Grok Build supplies native per-turn model batches: token counts, API duration and the actual number of model calls enter the same speed engine. Child usage is already included in its parent and is counted once; child activity remains visible. Its individual-call timeline is not stored, so intra-batch concurrency cannot be reconstructed.
-
-**Speed = output tokens ÷ the real time the model spent on them** — from the moment the request was sent until the response finished, including time to first token. Parallel agents add up. While a response is still streaming, it is estimated from that agent's recent measured speed and corrected with the measured value the instant it completes. Optionally you can switch to *total throughput* (input + output).
-
-The full, testable specification lives in [`spec/METRICS.md`](spec/METRICS.md). Both apps are verified against the same fixtures and an independent [reference implementation](spec/tools/reference.py).
-
-Ordinary Claude Desktop chat conversations are not stored on your computer, so they cannot be measured; WorkBuddy conversations that run in the cloud are not counted either.
-
-## Privacy
-
-Read-only. Local-only. No telemetry, no accounts. Agent Speed makes only three kinds of automatic network requests, and each one sends nothing about you: the update check against GitHub Releases, a daily download of the public model price table from this repository (GitHub, with jsDelivr as a mirror), and — only when you show costs in a currency other than US dollars — a daily download of public exchange rates (open.er-api.com, with the fawazahmed0 currency API and Frankfurter as fallbacks). Every user requests the same files, so no server learns your currency, models or usage. One switch in Settings turns all network access off; costs then use the price table and rates shipped with the app. Agent Speed never stores or displays conversation content — only token counts, model names and project folder names. The usage history keeps only daily totals (including each day's API-equivalent cost), in a small database on your computer (`~/Library/Application Support/AgentSpeed`, `%LOCALAPPDATA%\AgentSpeed`), and can be cleared in Settings. Updates are verified against the release's SHA-256 checksums before they are installed; the checksums are published with the release, so they catch corrupted or tampered downloads, not a compromised repository. The price table is plain data checked against strict rules; it is not signed.
-
-Network traffic: Agent Speed counts how many bytes programs send and receive, on this computer only. It never reads content, addresses or destinations; only live reporting (below), if you turn it on, sends your agents' byte counts to the service you chose. On Windows, per-agent traffic needs an optional helper service that runs as the restricted Local Service account and only counts bytes per process; it is installed and removed with one administrator prompt each ([details](spec/WINDOWS-SERVICE.md)).
-
-Live reporting (optional, off by default; the dashboard offers it once): if you turn it on for an API — for example a public leaderboard service such as the built-in Codex Radar speed ladder (`deng.codexradar.com`) — Agent Speed sends that service your live speed, the tokens used in the last few seconds and, if you leave them on, the API-equivalent cost in US dollars, your agents' network traffic, models in use and a per-tool breakdown, together with the username you choose (it starts as your computer's name; one click picks a random one). It reports every few seconds while your agents work and stops when they rest. It never sends conversation content, prompts, file, folder or project names, or your usage history, and failed reports are never resent. Each report is signed with a key that stays on your computer; the service can tell that reports come from the same device, not whether the numbers are true. You can pause, turn it off, or ask the service to forget your device in Settings.
-
-Optional API extensions also share per-model Harness counts and execution-mode metadata when model sharing is enabled. Avatar uploads and one-time device pairing happen only through explicit profile actions, with a receiver that supports the [extension schema](spec/report-schema.json); images never go into periodic reports. Paired devices retain independent private keys, and the network master switch also disables profile requests.
-
-Every host Agent Speed may contact, and when, is listed in [`spec/NETWORK.md`](spec/NETWORK.md).
+This advertises Windows 10 only to that reporting service. Device ID, signing key, nickname and sharing choices are retained, including across restarts. Reporting starts with new activity after enablement; older local history is not backfilled. Each computer needs its own configuration and consent.
 
 ## Build from source
 
-<details>
-<summary>macOS (Xcode 26 or later)</summary>
+Use Ubuntu 22.04 x64 with the **.NET 10 SDK** available on `PATH`. Install native packaging tools:
 
 ```sh
-cd macos
-swift test
-./scripts/build-app.sh          # → dist/AgentSpeed-macOS.zip
-```
-</details>
+sudo apt update
+sudo apt install -y clang-14 gcc make pkg-config libelf-dev zlib1g-dev linux-libc-dev python3 dpkg-dev desktop-file-utils
 
-<details>
-<summary>Windows (.NET 10 SDK; also cross-builds from macOS/Linux)</summary>
+git clone https://github.com/wlixill/agent-speed-ubuntu22.git
+cd agent-speed-ubuntu22
 
-```sh
-dotnet test windows/tests/AgentSpeed.Core.Tests
-dotnet test windows/tests/AgentSpeed.Presentation.Tests
-./windows/scripts/publish.sh    # → dist/AgentSpeed-Windows-{x64,arm64}.zip
-```
-</details>
-
-## Project layout
-
-```
-spec/       measurement + design specification, shared fixtures, reference implementation
-macos/      Swift package: AgentSpeedCore (engine) and AgentSpeed (SwiftUI app)
-windows/    .NET solution: AgentSpeed.Core (engine), AgentSpeed.Presentation, AgentSpeed (WPF app)
-assets/     icon artwork
-install.sh  install.ps1
+dotnet test windows/tests/AgentSpeed.Core.Tests -c Release
+dotnet test windows/tests/AgentSpeed.Presentation.Tests -c Release
+dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
+bash linux/scripts/package-deb.sh
 ```
 
-## Friends
+Outputs are `dist/agent-speed_1.4.1-8_amd64.deb`, its `.sha256` file and `dist/agent-speed-linux-release.json`. The package script builds the self-contained app and the optional traffic helper, with pinned libbpf source and licenses. A custom NuGet cache requires `NUGET_PACKAGES` to be set for license collection.
 
-[Codex Radar](https://codexradar.com/)
+For development, use `dotnet run --project linux/src/AgentSpeed.Linux -- --dashboard`. To produce the portable directory/tarball, use `bash linux/scripts/publish.sh`. See the [Linux guide](linux/README.md) for isolated X11 smoke checks and package validation.
 
-## License
+## Local data and network access
 
-[MIT](LICENSE) © 2026 zoefix
+Settings live in `~/.config/agent-speed/settings.json`; usage history lives in `~/.local/share/agent-speed/history.sqlite`. XDG overrides and `--data-dir` are supported. Source logs are read without modification, and conversation content is not stored in the history database.
+
+Application update checks, traffic collection, public price/rate refresh and reporting are off by default. Existing enabled preferences survive upgrades. Reporting sends the chosen metrics to the configured receiver; its credentials remain in the user's private data directory. Share source code and built packages separately from user data, credentials and diagnostic artifacts.
+
+## Scope and upstream
+
+The validated desktop target is **Ubuntu 22.04 x64 / GNOME / X11**. Wayland and ARM64 are not validated. Enhanced traffic requires compatible kernel BTF/kprobe/BPF support and system authentication; unsupported conditions retain the basic mode. There is no universal network master switch or full upstream feature parity yet.
+
+| Path | Purpose |
+| --- | --- |
+| `linux/` | Ubuntu desktop app, tests, packaging and optional traffic helper |
+| `windows/src/AgentSpeed.Core`, `windows/src/AgentSpeed.Presentation` | Shared measurement and presentation libraries reused by Ubuntu |
+| `spec/` | Shared metrics, fixtures and protocol contracts |
+| `macos/`, remaining `windows/` projects | Retained upstream platform implementations |
+
+For macOS/Windows installers and original documentation, use [zoefix/agent-speed](https://github.com/zoefix/agent-speed). Original project by zoefix; this repository maintains the Ubuntu port. [MIT license](LICENSE); third-party notices are included in Debian builds.
