@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="assets/icon/icon-1024.png" width="112" alt="Agent Speed 图标">
-
 # agent-speed-ubuntu22
 
 **面向 Ubuntu 22.04 x64 · GNOME / X11 的 Agent Speed**
@@ -10,10 +8,7 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md)
 
-![Ubuntu 22.04](https://img.shields.io/badge/Ubuntu-22.04-E95420?logo=ubuntu)
-![Desktop](https://img.shields.io/badge/Desktop-GNOME%20%2F%20X11-blue)
-![Architecture](https://img.shields.io/badge/Architecture-x64-blue)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[MIT 许可证](LICENSE)
 
 </div>
 
