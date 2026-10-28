@@ -23,7 +23,6 @@ jobs:
     timeout-minutes: 30
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
-      NUGET_PACKAGES: ${{ runner.temp }}/agent-speed-nuget
       RELEASE_TAG: ${{ inputs.release_tag }}
     outputs:
       deb_version: ${{ steps.version.outputs.deb_version }}
@@ -42,6 +41,7 @@ jobs:
           deb_version="$(cat VERSION)-$(cat linux/DEBIAN_REVISION)"
           test "$RELEASE_TAG" = "ubuntu-v$deb_version"
           test -f "docs/releases/$RELEASE_TAG.md"
+          printf 'NUGET_PACKAGES=%s/agent-speed-nuget\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
           printf 'deb_version=%s\n' "$deb_version" >> "$GITHUB_OUTPUT"
           printf 'source_commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
