@@ -6,10 +6,11 @@
 
 ## 安装 Debian 包（推荐）
 
-当前 Debian 修订版为 **1.4.1-8**。把 `agent-speed_1.4.1-8_amd64.deb` 复制到 Ubuntu 22.04 x64 桌面机，在该文件所在目录执行：
+下载 **1.4.1-9**，适用于 **Ubuntu 22.04 x64（amd64）**：[deb 安装包](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb) · [SHA-256 校验文件](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb.sha256) · [最新 Release](https://github.com/wlixill/agent-speed-ubuntu22/releases/latest)。把安装包和校验文件放在同一目录，执行：
 
 ```sh
-sudo apt install ./agent-speed_1.4.1-8_amd64.deb
+sha256sum -c agent-speed_1.4.1-9_amd64.deb.sha256
+sudo apt install ./agent-speed_1.4.1-9_amd64.deb
 ```
 
 随后在应用菜单中搜索 **Agent Speed** 启动，也可以执行 `agent-speed --dashboard`。
@@ -121,7 +122,7 @@ bash linux/scripts/package-deb.sh
 
 发布到 `dist/AgentSpeed-Ubuntu-linux-x64/`，并生成同名 `.tar.gz`。`linux-arm64` 可作为发布参数，但尚未在 ARM64 实机验证。
 
-Debian 包版本由仓库根目录的 `VERSION` 与 `linux/DEBIAN_REVISION` 组合，当前生成 `dist/agent-speed_1.4.1-8_amd64.deb` 及 SHA-256 校验文件。
+Debian 包版本由仓库根目录的 `VERSION` 与 `linux/DEBIAN_REVISION` 组合，当前生成 `dist/agent-speed_1.4.1-9_amd64.deb` 及 SHA-256 校验文件。
 增强组件静态包含固定版本 libbpf，不替换宿主机库。除 SDK 外需要 `clang-14`、`gcc`、`make`、`pkg-config`、`libelf-dev`、`zlib1g-dev`、`linux-libc-dev`、`python3`、`dpkg-deb` 和 `desktop-file-validate`（Ubuntu 的 `desktop-file-utils` 包）。
 脚本会独立构建，不覆盖正在运行的便携版；也可用 `--publish-dir PATH` 对已经发布的 x64 目录打包。
 第三方许可证从构建所用的 NuGet 缓存收集，缓存位置自定义时需设置 `NUGET_PACKAGES`。

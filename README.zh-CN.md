@@ -16,13 +16,13 @@
 
 ## 安装 deb
 
-当前包修订版为 **1.4.1-8**。可按下文从源码打包，或使用分发者提供的 `.deb` 与校验文件。编译产物不放入 Git 源码目录；本 fork 的 GitHub Releases 尚未发布 Ubuntu 安装包。
+下载 **1.4.1-9**，适用于 **Ubuntu 22.04 x64（amd64）**：[deb 安装包](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb) · [SHA-256 校验文件](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb.sha256) · [最新 Release](https://github.com/wlixill/agent-speed-ubuntu22/releases/latest)。
 
 在安装包与校验文件所在目录执行：
 
 ```sh
-sha256sum -c agent-speed_1.4.1-8_amd64.deb.sha256
-sudo apt install ./agent-speed_1.4.1-8_amd64.deb
+sha256sum -c agent-speed_1.4.1-9_amd64.deb.sha256
+sudo apt install ./agent-speed_1.4.1-9_amd64.deb
 ```
 
 安装后，从应用菜单搜索 **Agent Speed** 启动，也可以运行：
@@ -75,7 +75,7 @@ dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
 bash linux/scripts/package-deb.sh
 ```
 
-生成 `dist/agent-speed_1.4.1-8_amd64.deb`、对应 `.sha256` 及 `dist/agent-speed-linux-release.json`。脚本会构建自带运行时的应用与可选流量辅助程序，包含固定版本的 libbpf 源码、校验和及许可证。使用自定义 NuGet 缓存时，应设置 `NUGET_PACKAGES`，供许可证收集使用。
+生成 `dist/agent-speed_1.4.1-9_amd64.deb`、对应 `.sha256` 及 `dist/agent-speed-linux-release.json`。脚本会构建自带运行时的应用与可选流量辅助程序，包含固定版本的 libbpf 源码、校验和及许可证。使用自定义 NuGet 缓存时，应设置 `NUGET_PACKAGES`，供许可证收集使用。
 
 开发运行：`dotnet run --project linux/src/AgentSpeed.Linux -- --dashboard`。便携目录和 tar.gz 使用 `bash linux/scripts/publish.sh` 生成。隔离 X11 界面验证及安装包检查见 [Linux 使用说明](linux/README.md)。
 

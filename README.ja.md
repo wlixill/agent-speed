@@ -8,11 +8,11 @@
 
 ## インストール
 
-現在の deb リビジョンは **1.4.1-8** です。下の手順でビルドするか、配布者から deb とチェックサムを入手してください。この fork の GitHub Releases では Ubuntu パッケージをまだ公開していません。ビルド済みファイルは Git のソースツリーに含まれません。
+**Ubuntu 22.04 x64（amd64）** 向け **1.4.1-9**：[deb インストーラー](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb) · [SHA-256 チェックサム](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb.sha256) · [最新リリース](https://github.com/wlixill/agent-speed-ubuntu22/releases/latest)。
 
 ```sh
-sha256sum -c agent-speed_1.4.1-8_amd64.deb.sha256
-sudo apt install ./agent-speed_1.4.1-8_amd64.deb
+sha256sum -c agent-speed_1.4.1-9_amd64.deb.sha256
+sudo apt install ./agent-speed_1.4.1-9_amd64.deb
 agent-speed --dashboard
 ```
 
@@ -46,6 +46,6 @@ dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
 bash linux/scripts/package-deb.sh
 ```
 
-`dist/agent-speed_1.4.1-8_amd64.deb`、SHA-256 チェックサム、更新フィードが生成されます。`bash linux/scripts/publish.sh` はランタイム同梱のポータブルディレクトリーと tar.gz を生成します。リポジトリ名は `agent-speed-ubuntu22`、Debian パッケージと起動コマンドは `agent-speed` です。
+`dist/agent-speed_1.4.1-9_amd64.deb`、SHA-256 チェックサム、更新フィードが生成されます。`bash linux/scripts/publish.sh` はランタイム同梱のポータブルディレクトリーと tar.gz を生成します。リポジトリ名は `agent-speed-ubuntu22`、Debian パッケージと起動コマンドは `agent-speed` です。
 
 元のログは読み取り専用で、履歴データベースに会話本文を保存しません。個人のデータ、送信資格情報、診断出力はローカルに保持してください。原作は zoefix、ライセンスは [MIT](LICENSE) です。macOS／Windows のインストール方法は[上流リポジトリ](https://github.com/zoefix/agent-speed)を参照してください。

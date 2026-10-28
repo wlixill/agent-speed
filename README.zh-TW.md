@@ -8,11 +8,11 @@
 
 ## 安裝
 
-目前 deb 修訂版為 **1.4.1-8**。可依下方指令從原始碼建置，或使用分發者提供的 deb 與校驗檔。本 fork 的 GitHub Releases 尚未發佈 Ubuntu 安裝包；編譯產物不放入 Git 原始碼目錄。
+下載 **1.4.1-9**，適用於 **Ubuntu 22.04 x64（amd64）**：[deb 安裝包](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb) · [SHA-256 校驗檔](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb.sha256) · [最新 Release](https://github.com/wlixill/agent-speed-ubuntu22/releases/latest)。
 
 ```sh
-sha256sum -c agent-speed_1.4.1-8_amd64.deb.sha256
-sudo apt install ./agent-speed_1.4.1-8_amd64.deb
+sha256sum -c agent-speed_1.4.1-9_amd64.deb.sha256
+sudo apt install ./agent-speed_1.4.1-9_amd64.deb
 agent-speed --dashboard
 ```
 
@@ -46,6 +46,6 @@ dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
 bash linux/scripts/package-deb.sh
 ```
 
-產物為 `dist/agent-speed_1.4.1-8_amd64.deb`、SHA-256 校驗檔與更新清單。使用 `bash linux/scripts/publish.sh` 可產生自帶執行階段的便攜目錄與 tar.gz。倉庫名稱為 `agent-speed-ubuntu22`，Debian 包與啟動指令為 `agent-speed`。
+產物為 `dist/agent-speed_1.4.1-9_amd64.deb`、SHA-256 校驗檔與更新清單。使用 `bash linux/scripts/publish.sh` 可產生自帶執行階段的便攜目錄與 tar.gz。倉庫名稱為 `agent-speed-ubuntu22`，Debian 包與啟動指令為 `agent-speed`。
 
 原始日誌以唯讀方式開啟，歷史庫不保存對話正文。使用者資料、上報憑據與診斷產物應保留在本機。原專案由 zoefix 創作，採用 [MIT 授權](LICENSE)；macOS／Windows 安裝方式請參考[上游倉庫](https://github.com/zoefix/agent-speed)。

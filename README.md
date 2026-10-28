@@ -16,13 +16,13 @@ This Ubuntu fork of [zoefix/agent-speed](https://github.com/zoefix/agent-speed) 
 
 ## Install a Debian package
 
-The current package revision is **1.4.1-8**. Build a package using the instructions below, or obtain a matching `.deb` and checksum from its distributor. Compiled packages are excluded from the Git source tree; Ubuntu packages have not yet been published in this fork's GitHub Releases.
+Download **1.4.1-9** for **Ubuntu 22.04 x64 (amd64)**: [Debian installer](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb) · [SHA-256 checksum](https://github.com/wlixill/agent-speed-ubuntu22/releases/download/ubuntu-v1.4.1-9/agent-speed_1.4.1-9_amd64.deb.sha256) · [Latest release](https://github.com/wlixill/agent-speed-ubuntu22/releases/latest).
 
 From the directory containing the package and checksum:
 
 ```sh
-sha256sum -c agent-speed_1.4.1-8_amd64.deb.sha256
-sudo apt install ./agent-speed_1.4.1-8_amd64.deb
+sha256sum -c agent-speed_1.4.1-9_amd64.deb.sha256
+sudo apt install ./agent-speed_1.4.1-9_amd64.deb
 ```
 
 Search **Agent Speed** in the application menu, or run:
@@ -75,7 +75,7 @@ dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
 bash linux/scripts/package-deb.sh
 ```
 
-Outputs are `dist/agent-speed_1.4.1-8_amd64.deb`, its `.sha256` file and `dist/agent-speed-linux-release.json`. The package script builds the self-contained app and the optional traffic helper, with pinned libbpf source and licenses. A custom NuGet cache requires `NUGET_PACKAGES` to be set for license collection.
+Outputs are `dist/agent-speed_1.4.1-9_amd64.deb`, its `.sha256` file and `dist/agent-speed-linux-release.json`. The package script builds the self-contained app and the optional traffic helper, with pinned libbpf source and licenses. A custom NuGet cache requires `NUGET_PACKAGES` to be set for license collection.
 
 For development, use `dotnet run --project linux/src/AgentSpeed.Linux -- --dashboard`. To produce the portable directory/tarball, use `bash linux/scripts/publish.sh`. See the [Linux guide](linux/README.md) for isolated X11 smoke checks and package validation.
 
