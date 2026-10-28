@@ -1,0 +1,9 @@
+Agent Speed optional traffic helper statically links libbpf 1.4.7.
+Source: https://github.com/libbpf/libbpf/releases/tag/v1.4.7
+Archive: https://github.com/libbpf/libbpf/archive/refs/tags/v1.4.7.tar.gz
+SHA-256: 15ffcd76eb7277539410b2f72f0acc3571a1c4a32412e57eaf116d7b3cbf7acf
+libbpf is dual-licensed LGPL-2.1 OR BSD-2-Clause. This distribution selects
+BSD-2-Clause; its copyright, license terms and disclaimer are included in
+LIBBPF-LICENSE. The unchanged complete source archive is included alongside
+this notice. System libelf and zlib remain distribution-provided dynamic dependencies.
+The helper never replaces the host's libbpf libraries.
