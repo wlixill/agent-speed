@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>AgentSpeed.Linux</AssemblyName>
+    <RootNamespace>AgentSpeed.Linux</RootNamespace>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../windows/src/AgentSpeed.Core/AgentSpeed.Core.csproj" />
+    <ProjectReference Include="../../../windows/src/AgentSpeed.Presentation/AgentSpeed.Presentation.csproj" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
+    <AvaloniaResource Include="../../../assets/icon/icon-windows-256.png" Link="Assets/icon.png" />
+  </ItemGroup>
+</Project>

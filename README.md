@@ -17,6 +17,8 @@
 
 </div>
 
+This fork includes an **Ubuntu 22.04 x64 / GNOME / X11** port with live gauges, independent floating orbs, a tray indicator, usage history, optional reporting, and Debian packaging. See [`linux/README.md`](linux/README.md) for installation, source builds, and platform limitations.
+
 ## Install
 
 **macOS 14 or later** (Apple Silicon and Intel) — paste into Terminal:

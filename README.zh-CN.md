@@ -111,6 +111,8 @@ Agent Speed 可能连接的所有主机与时机，都列在 [`spec/NETWORK.md`]
 
 ## 从源码构建
 
+Ubuntu 22.04 x64 GNOME/X11 版支持本地多来源测速、五种表盘与多个悬浮窗、数字托盘、历史统计，以及可配置的 deb 更新、流量监测和可选上报。各功能的使用方法与平台限制见 [`linux/README.md`](linux/README.md)。
+
 <details>
 <summary>macOS（Xcode 26 及以上）</summary>
 
