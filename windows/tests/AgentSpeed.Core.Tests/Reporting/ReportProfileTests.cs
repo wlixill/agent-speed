@@ -22,7 +22,8 @@ public sealed class ReportProfileTests
         Assert.Null(ReportProfileJson.Profile(Encoding.UTF8.GetBytes(Profile.Replace("\"online\":true", "\"online\":1", StringComparison.Ordinal)), ReportUsernameRules.Standard));
         Assert.Null(ReportProfileJson.Profile(new byte[65_537], ReportUsernameRules.Standard));
         Assert.Null(ReportProfileJson.Profile("[]"u8, ReportUsernameRules.Standard));
-        Assert.Null(ReportProfileJson.Profile(Encoding.UTF8.GetBytes(Profile.Replace("Windows", "Linux", StringComparison.Ordinal)), ReportUsernameRules.Standard));
+        Assert.NotNull(ReportProfileJson.Profile(Encoding.UTF8.GetBytes(Profile.Replace("Windows", "Linux", StringComparison.Ordinal)), ReportUsernameRules.Standard));
+        Assert.Null(ReportProfileJson.Profile(Encoding.UTF8.GetBytes(Profile.Replace("Windows", "Android", StringComparison.Ordinal)), ReportUsernameRules.Standard));
         var duplicateCurrent = System.Text.Json.Nodes.JsonNode.Parse(Profile)!;
         var devices = duplicateCurrent["devices"]!.AsArray();
         var other = devices[0]!.DeepClone();
