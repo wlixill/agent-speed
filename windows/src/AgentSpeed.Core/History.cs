@@ -5,6 +5,12 @@ namespace AgentSpeed.Core;
 /// <param name="MeasuredMs">Widened duration of the model's measured responses (METRICS 3.3).</param>
 public sealed record ModelUsage(string Model, long Requests, long Output, long MeasuredOutput = 0, long MeasuredMs = 0)
 {
+    /// <summary>Input tokens including cache reads; null for history stored before model input was recorded.</summary>
+    public long? Input { get; init; }
+
+    /// <summary>Cache-read input tokens; null for history stored before model input was recorded.</summary>
+    public long? CachedInput { get; init; }
+
     /// <summary>The model's cost on that day (METRICS 9.7); null when it was stored before costs existed.</summary>
     public CostTally? Cost { get; init; }
 
