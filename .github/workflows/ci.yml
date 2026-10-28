@@ -43,7 +43,7 @@ jobs:
       - name: Install UI and native traffic build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb x11-utils desktop-file-utils fonts-noto-cjk clang-14 gcc make pkg-config linux-libc-dev libelf-dev zlib1g-dev policykit-1 libicu70 libssl3 libfontconfig1 libfreetype6 libx11-6 libxext6 libxi6 libxrandr2 libxcursor1 libxfixes3 libice6 libsm6 libgl1 libgtk-3-0
+          sudo apt-get install -y xvfb xserver-xephyr x11-utils desktop-file-utils fonts-noto-cjk clang-14 gcc make pkg-config linux-libc-dev libelf-dev zlib1g-dev policykit-1 libicu70 libssl3 libfontconfig1 libfreetype6 libx11-6 libxext6 libxi6 libxrandr2 libxcursor1 libxfixes3 libice6 libsm6 libgl1 libgtk-3-0
       - name: Test shared core on Linux
         run: dotnet test windows/tests/AgentSpeed.Core.Tests -c Release
       - name: Test Linux application logic
