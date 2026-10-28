@@ -1,0 +1,125 @@
+name: Ubuntu release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing Ubuntu tag (ubuntu-vVERSION-REVISION)
+        required: true
+        default: ubuntu-v1.4.1-9
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ubuntu-release-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and validate Ubuntu 22.04 amd64
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      NUGET_PACKAGES: ${{ runner.temp }}/agent-speed-nuget
+      RELEASE_TAG: ${{ inputs.release_tag }}
+    outputs:
+      deb_version: ${{ steps.version.outputs.deb_version }}
+      source_commit: ${{ steps.version.outputs.source_commit }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: refs/tags/${{ inputs.release_tag }}
+          persist-credentials: false
+      - name: Validate source tag and package version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^ubuntu-v[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$ ]]
+          deb_version="$(cat VERSION)-$(cat linux/DEBIAN_REVISION)"
+          test "$RELEASE_TAG" = "ubuntu-v$deb_version"
+          test -f "docs/releases/$RELEASE_TAG.md"
+          printf 'deb_version=%s\n' "$deb_version" >> "$GITHUB_OUTPUT"
+          printf 'source_commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.403
+      - name: Install Ubuntu build and validation dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb x11-utils bubblewrap desktop-file-utils fonts-noto-cjk clang-14 gcc make pkg-config linux-libc-dev libelf-dev zlib1g-dev policykit-1 libicu70 libssl3 libfontconfig1 libfreetype6 libsqlite3-0 libx11-6 libxext6 libxi6 libxrandr2 libxcursor1 libxfixes3 libice6 libsm6 libgl1 libgtk-3-0
+      - name: Test shared core, presentation and Linux logic
+        run: |
+          dotnet test windows/tests/AgentSpeed.Core.Tests -c Release
+          dotnet test windows/tests/AgentSpeed.Presentation.Tests -c Release
+          dotnet test linux/tests/AgentSpeed.Linux.Tests -c Release
+      - name: Build the self-contained Debian package
+        run: bash linux/scripts/package-deb.sh
+      - name: Validate the package and APT dependencies
+        env:
+          DEB_VERSION: ${{ steps.version.outputs.deb_version }}
+        run: |
+          python3 linux/scripts/check-deb.py "dist/agent-speed_${DEB_VERSION}_amd64.deb" --output-dir artifacts/release-deb-check
+          apt-get -s install "$PWD/dist/agent-speed_${DEB_VERSION}_amd64.deb" > artifacts/release-apt-simulation.log
+          cd dist
+          sha256sum -c "agent-speed_${DEB_VERSION}_amd64.deb.sha256"
+          cat "agent-speed_${DEB_VERSION}_amd64.deb.sha256"
+      - name: Exercise the packaged app with isolated synthetic Codex logs
+        run: xvfb-run -a python3 linux/scripts/smoke_test.py artifacts/release-deb-check/root/opt/agent-speed/AgentSpeed.Linux
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ubuntu-deb-${{ steps.version.outputs.deb_version }}
+          path: |
+            dist/agent-speed_${{ steps.version.outputs.deb_version }}_amd64.deb
+            dist/agent-speed_${{ steps.version.outputs.deb_version }}_amd64.deb.sha256
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish Ubuntu release assets
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: refs/tags/${{ inputs.release_tag }}
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: ubuntu-deb-${{ needs.build.outputs.deb_version }}
+          path: dist
+      - name: Publish validated deb and SHA-256 to the Ubuntu release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          DEB_VERSION: ${{ needs.build.outputs.deb_version }}
+          SOURCE_COMMIT: ${{ needs.build.outputs.source_commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          test "$RELEASE_TAG" = "ubuntu-v$DEB_VERSION"
+          deb="agent-speed_${DEB_VERSION}_amd64.deb"
+          (cd dist && sha256sum -c "$deb.sha256")
+          existing="$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft 2>/dev/null || true)"
+          if [ "$existing" = false ]; then
+            echo 'Release is already public; refusing to overwrite its assets.' >&2
+            exit 1
+          elif [ "$existing" != true ]; then
+            gh release create "$RELEASE_TAG" --verify-tag --draft \
+              --title "Agent Speed Ubuntu 22.04 x64 · $DEB_VERSION" \
+              --notes-file "docs/releases/$RELEASE_TAG.md"
+          fi
+          gh release upload "$RELEASE_TAG" "dist/$deb" "dist/$deb.sha256" --clobber
+          gh release edit "$RELEASE_TAG" --draft=false --latest \
+            --title "Agent Speed Ubuntu 22.04 x64 · $DEB_VERSION" \
+            --notes-file "docs/releases/$RELEASE_TAG.md"
+          printf 'Published %s from source commit %s\n' "$RELEASE_TAG" "$SOURCE_COMMIT"
+          cat "dist/$deb.sha256"
