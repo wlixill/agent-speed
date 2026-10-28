@@ -1,0 +1,12 @@
+{
+  "Avalonia": {
+    "version": "12.1.4",
+    "source": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/2d79ba55fae1b1e71c69f93a668080c9029e6a31/licence.md",
+    "file": "Avalonia-12.1.4-MIT.txt"
+  },
+  "ZstdSharp.Port": {
+    "version": "0.8.8",
+    "source": "https://raw.githubusercontent.com/oleg-st/ZstdSharp/2cd0c019693bc786a5fe5c3be94e107b24e7267e/LICENSE",
+    "file": "ZstdSharp.Port-0.8.8-MIT.txt"
+  }
+}
