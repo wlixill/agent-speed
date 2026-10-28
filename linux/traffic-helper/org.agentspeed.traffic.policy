@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN" "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>Agent Speed</vendor>
+  <action id="org.agentspeed.traffic.capture">
+    <description>Enable Agent Speed socket traffic monitoring</description>
+    <description xml:lang="zh_CN">启用 Agent Speed 增强流量观测</description>
+    <message>Administrator authentication is required to observe this user's TCP and UDP socket byte counters. No contents or connection addresses are collected.</message>
+    <message xml:lang="zh_CN">需要管理员认证以观测当前用户的 TCP、UDP 套接字字节数。不会采集通信内容或连接地址，关闭监测或退出应用后停止。</message>
+    <defaults><allow_any>no</allow_any><allow_inactive>auth_admin</allow_inactive><allow_active>auth_admin_keep</allow_active></defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/agent-speed/traffic/agent-speed-traffic-helper</annotate>
+  </action>
+</policyconfig>
