@@ -241,7 +241,7 @@ public sealed class ExecutionModeTests
         }
         using (var read = SqliteConnection.Open(db, SqliteOpenMode.ReadWriteCreate))
         {
-            Assert.Equal(3, read.ScalarInt64("PRAGMA user_version"));
+            Assert.Equal(HistoryStore.SchemaVersion, read.ScalarInt64("PRAGMA user_version"));
             read.Execute("DROP TABLE contribution_modes; UPDATE files SET version=3;");
         }
         File.Delete(path);
