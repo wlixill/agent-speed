@@ -88,7 +88,7 @@ public static class ReportProfileJson
     private static ReportProfileDevice? Device(JsonElement value, bool requireFlags)
     {
         if (value.ValueKind != JsonValueKind.Object || String(value, "deviceId") is not { } id || !ReportCanonical.IsDeviceId(id)
-            || String(value, "platform") is not { } platform || platform is not ("macOS" or "Windows")) return null;
+            || String(value, "platform") is not { } platform || platform is not ("macOS" or "Windows" or "Linux")) return null;
         if (requireFlags && (!Bool(value, "isCurrent", out _) || !Bool(value, "online", out _))) return null;
         Bool(value, "isCurrent", out var current);
         Bool(value, "online", out var online);
