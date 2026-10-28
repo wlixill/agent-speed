@@ -94,7 +94,8 @@
         "platform": {
           "enum": [
             "macOS",
-            "Windows"
+            "Windows",
+            "Linux"
           ]
         },
         "osMajor": {
@@ -996,7 +997,8 @@
         "platform": {
           "enum": [
             "macOS",
-            "Windows"
+            "Windows",
+            "Linux"
           ]
         },
         "isCurrent": {
@@ -1072,7 +1074,8 @@
         "platform": {
           "enum": [
             "macOS",
-            "Windows"
+            "Windows",
+            "Linux"
           ]
         }
       }
