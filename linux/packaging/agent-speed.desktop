@@ -1,0 +1,17 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Agent Speed
+GenericName=AI Agent Speed Monitor
+GenericName[zh_CN]=AI 工具实时测速
+Comment=Monitor AI agent token speed and local usage history
+Comment[zh_CN]=AI 工具实时测速、悬浮窗与本地用量历史
+Exec=/opt/agent-speed/AgentSpeed.Linux --dashboard
+TryExec=/opt/agent-speed/AgentSpeed.Linux
+Icon=agent-speed
+Terminal=false
+StartupNotify=false
+StartupWMClass=agent-speed
+Categories=Utility;
+Keywords=Codex;token;speed;usage;AI;
+Keywords[zh_CN]=Codex;测速;用量;AI;
